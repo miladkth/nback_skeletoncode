@@ -43,6 +43,8 @@ class MainActivity : ComponentActivity() {
 
                     // Instantiate the homescreen
                     HomeScreen(vm = gameViewModel)
+
+                    //GameScreen(vm = gameViewModel)
                 }
             }
         }

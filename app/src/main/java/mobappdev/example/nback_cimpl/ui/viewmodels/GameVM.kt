@@ -89,6 +89,10 @@ class GameVM(
                 GameType.Visual -> runVisualGame(events)
             }
             // Todo: update the highscore
+            if (_score.value > _highscore.value) {
+                _highscore.value = _score.value
+                userPreferencesRepository.saveHighScore(_highscore.value)
+            }
         }
     }
 
@@ -97,7 +101,45 @@ class GameVM(
          * Todo: This function should check if there is a match when the user presses a match button
          * Make sure the user can only register a match once for each event.
          */
+
+        val currentGameState = gameState.value
+
+        //check if the event is valid(not equal to -1) and has not been registered yes
+        if (currentGameState.eventValue != -1 && isEventAlreadyRegistered(currentGameState.eventValue)) {
+            //check if there is a match based on user input
+
+            val userInput = checkMatch() //TODO: get user input, replace with actual method to get user input
+            val isMatch = isUserInputMatch(userInput, currentGameState.eventValue)
+
+            if (isMatch) {
+                //update score and prevent registrering a match for the same event again
+                _score.value += 1
+                _gameState.value = currentGameState.copy(eventValue = -1)
+            }
+        }
+
     }
+
+    // Set to keep track of registered events
+    private val registeredEvents = mutableSetOf<Int>()
+
+    // Function to check if the event has already been registered
+    private fun isEventAlreadyRegistered(eventValue: Int): Boolean {
+        return registeredEvents.contains(eventValue)
+    }
+    // Function to register the event
+    private fun registerEvent(eventValue: Int) {
+        registeredEvents.add(eventValue)
+        _gameState.value = _gameState.value.copy(eventValue = -1)
+    }
+
+    // TODO: Implement the logic to check if user input matches the event
+    private fun isUserInputMatch(userInput: /* Replace with actual type */, eventValue: Int): Boolean {
+        // TODO: Replace this with your actual logic to check if user input matches the event
+        return false
+    }
+
+
     private fun runAudioGame() {
         // Todo: Make work for Basic grade
     }

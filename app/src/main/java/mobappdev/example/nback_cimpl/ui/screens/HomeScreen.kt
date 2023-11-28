@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import mobappdev.example.nback_cimpl.R
 import mobappdev.example.nback_cimpl.ui.viewmodels.FakeVM
+import mobappdev.example.nback_cimpl.ui.viewmodels.GameType
 import mobappdev.example.nback_cimpl.ui.viewmodels.GameViewModel
 
 /**
@@ -106,6 +107,7 @@ fun HomeScreen(
             ) {
                 Button(onClick = {
                     // Todo: change this button behaviour
+                    //vm.checkMatch()
                     scope.launch {
                         snackBarHostState.showSnackbar(
                             message = "Hey! you clicked the audio button"
@@ -123,6 +125,8 @@ fun HomeScreen(
                 Button(
                     onClick = {
                         // Todo: change this button behaviour
+                        //vm.checkMatch()
+                        vm.setGameType(GameType.Visual)
                         scope.launch {
                             snackBarHostState.showSnackbar(
                                 message = "Hey! you clicked the visual button",
