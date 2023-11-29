@@ -43,7 +43,7 @@ interface GameViewModel {
     fun setGameType(gameType: GameType)
     fun startGame()
 
-    fun checkMatch()
+    fun checkMatch(userInput: GameType)
 }
 
 class GameVM(
@@ -96,7 +96,9 @@ class GameVM(
         }
     }
 
-    override fun checkMatch() {
+
+
+    override fun checkMatch(userInput: GameType, ) {
         /**
          * Todo: This function should check if there is a match when the user presses a match button
          * Make sure the user can only register a match once for each event.
@@ -108,8 +110,7 @@ class GameVM(
         if (currentGameState.eventValue != -1 && isEventAlreadyRegistered(currentGameState.eventValue)) {
             //check if there is a match based on user input
 
-            val userInput = checkMatch() //TODO: get user input, replace with actual method to get user input
-            val isMatch = isUserInputMatch(userInput, currentGameState.eventValue)
+            val isMatch = false
 
             if (isMatch) {
                 //update score and prevent registrering a match for the same event again
@@ -134,7 +135,7 @@ class GameVM(
     }
 
     // TODO: Implement the logic to check if user input matches the event
-    private fun isUserInputMatch(userInput: /* Replace with actual type */, eventValue: Int): Boolean {
+    private fun isUserInputMatch(userInput:GameType): Boolean {
         // TODO: Replace this with your actual logic to check if user input matches the event
         return false
     }
@@ -189,22 +190,3 @@ data class GameState(
     val eventValue: Int = -1  // The value of the array string
 )
 
-class FakeVM: GameViewModel{
-    override val gameState: StateFlow<GameState>
-        get() = MutableStateFlow(GameState()).asStateFlow()
-    override val score: StateFlow<Int>
-        get() = MutableStateFlow(2).asStateFlow()
-    override val highscore: StateFlow<Int>
-        get() = MutableStateFlow(42).asStateFlow()
-    override val nBack: Int
-        get() = 2
-
-    override fun setGameType(gameType: GameType) {
-    }
-
-    override fun startGame() {
-    }
-
-    override fun checkMatch() {
-    }
-}

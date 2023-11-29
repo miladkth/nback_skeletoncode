@@ -1,12 +1,17 @@
 package mobappdev.example.nback_cimpl
 
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.viewmodel.compose.viewModel
 import mobappdev.example.nback_cimpl.ui.screens.HomeScreen
 import mobappdev.example.nback_cimpl.ui.theme.NBack_CImplTheme
@@ -36,6 +41,20 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    val configuration = LocalConfiguration.current
+                    LaunchedEffect(configuration) {
+                        snapshotFlow { configuration.orientation }
+                            .collect { orientation ->
+                                when (orientation) {
+                                    Configuration.ORIENTATION_LANDSCAPE -> {
+                                        Log.d("GameVM","This is Landscape")
+                                    }
+                                    else -> {
+                                        Log.d("GameVM","This is Portrait")
+                                    }
+                                }
+                            }
+                    }
                     // Instantiate the viewmodel
                     val gameViewModel: GameVM = viewModel(
                         factory = GameVM.Factory

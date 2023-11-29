@@ -31,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import mobappdev.example.nback_cimpl.R
-import mobappdev.example.nback_cimpl.ui.viewmodels.FakeVM
 import mobappdev.example.nback_cimpl.ui.viewmodels.GameType
 import mobappdev.example.nback_cimpl.ui.viewmodels.GameViewModel
 
@@ -127,6 +126,7 @@ fun HomeScreen(
                         // Todo: change this button behaviour
                         //vm.checkMatch()
                         vm.setGameType(GameType.Visual)
+
                         scope.launch {
                             snackBarHostState.showSnackbar(
                                 message = "Hey! you clicked the visual button",
@@ -147,11 +147,3 @@ fun HomeScreen(
     }
 }
 
-@Preview
-@Composable
-fun HomeScreenPreview() {
-    // Since I am injecting a VM into my homescreen that depends on Application context, the preview doesn't work.
-    Surface(){
-        HomeScreen(FakeVM())
-    }
-}
