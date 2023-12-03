@@ -39,6 +39,7 @@ interface GameViewModel {
     val score: StateFlow<Int>
     val highscore: StateFlow<Int>
     val nBack: Int
+    val grid: StateFlow<List<List<Boolean>>>
 
     fun setGameType(gameType: GameType)
     fun startGame()
@@ -69,6 +70,9 @@ class GameVM(
 
     private val nBackHelper = NBackHelper()  // Helper that generate the event array
     private var events = emptyArray<Int>()  // Array with all events
+
+    private val _grid: MutableStateFlow<List<List<Boolean>>> = MutableStateFlow(emptyList())
+    override val grid: StateFlow<List<List<Boolean>>> get() = _grid.asStateFlow()
 
     override fun setGameType(gameType: GameType) {
         // update the gametype in the gamestate
@@ -147,6 +151,8 @@ class GameVM(
 
     private suspend fun runVisualGame(events: Array<Int>){
         // Todo: Replace this code for actual game code
+        Log.d("mygame","in visual game")
+        initGrid()
         for (value in events) {
             _gameState.value = _gameState.value.copy(eventValue = value)
             delay(eventInterval)
@@ -175,7 +181,14 @@ class GameVM(
             }
         }
     }
+
+    fun initGrid(){
+        val grid = List(3) { List(3) { false } }
+        _grid.value = grid
+    }
 }
+
+
 
 // Class with the different game types
 enum class GameType{

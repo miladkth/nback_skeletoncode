@@ -1,3 +1,5 @@
+
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -65,7 +67,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation "androidx.compose.foundation:foundation:1.1.0-beta01"//Implementerade enligt behov
+    implementation ("androidx.compose.foundation:foundation:1.1.0-beta01")//Implementerade enligt behov
 
     // Navigation (2.4.0 because I target API 33)
     implementation("androidx.navigation:navigation-compose:2.4.0")
@@ -81,4 +83,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+
 }

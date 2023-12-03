@@ -1,0 +1,1 @@
+C:\mobilaApp\nback_skeletoncode2\app\src\main\cpp\CMakeLists.txt
