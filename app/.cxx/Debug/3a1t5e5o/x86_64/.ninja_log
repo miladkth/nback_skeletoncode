@@ -10,3 +10,9 @@
 17	164	7233870498909876	CMakeFiles/JniBridge.dir/JniBridge.c.o	e00a43689e6dd93d
 145	284	7233870500346863	C:/mobilaApp/nback_skeletoncode2/app/build/intermediates/cxx/Debug/3a1t5e5o/obj/x86_64/libnback_cimpl.so	b58e866393cf0dcc
 285	437	7233870501870071	C:/mobilaApp/nback_skeletoncode2/app/build/intermediates/cxx/Debug/3a1t5e5o/obj/x86_64/libJniBridge.so	847163a195c3628d
+1	29	0	clean	300499a662b0dcf2
+1	28	0	clean	300499a662b0dcf2
+23	779	7234019174418317	CMakeFiles/nback_cimpl.dir/nback.c.o	8c8f0b7af3a5a4a6
+50	858	7234019174518794	CMakeFiles/JniBridge.dir/JniBridge.c.o	e00a43689e6dd93d
+783	2199	7234019187585553	C:/mobilaApp/nback_skeletoncode2/app/build/intermediates/cxx/Debug/3a1t5e5o/obj/x86_64/libnback_cimpl.so	b58e866393cf0dcc
+2201	3353	7234019200230140	C:/mobilaApp/nback_skeletoncode2/app/build/intermediates/cxx/Debug/3a1t5e5o/obj/x86_64/libJniBridge.so	847163a195c3628d

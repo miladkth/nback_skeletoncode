@@ -36,15 +36,19 @@ import mobappdev.example.nback_cimpl.data.UserPreferencesRepository
 
 
 interface GameViewModel {
+
     val gameState: StateFlow<GameState>
     val score: StateFlow<Int>
     val highscore: StateFlow<Int>
-    val nBack: Int
+    val nBack: StateFlow<Int>
     val grid: StateFlow<List<List<Boolean>>>
+    val counter: StateFlow<Int>
     fun setGameType(gameType: GameType)
     fun startGame()
 
     fun checkMatch()
+    fun increaseNback() {}
+    fun decreaseNback(){}
 }
 
 class GameVM(
@@ -53,6 +57,7 @@ class GameVM(
     private val _gameState = MutableStateFlow(GameState())
     override val gameState: StateFlow<GameState>
         get() = _gameState.asStateFlow()
+
 
     private val _score = MutableStateFlow(0)
     override val score: StateFlow<Int>
@@ -63,7 +68,9 @@ class GameVM(
         get() = _highscore
 
     // nBack is currently hardcoded
-    override val nBack: Int = 2
+    private val _nBack = MutableStateFlow(1)
+    override val nBack: StateFlow<Int>
+        get() = _nBack
 
     private var job: Job? = null  // coroutine job for the game event
     private val eventInterval: Long = 2000L  // 2000 ms (2s)
@@ -75,6 +82,11 @@ class GameVM(
     private val _grid: MutableStateFlow<List<List<Boolean>>> = MutableStateFlow(emptyList())
     override val grid: StateFlow<List<List<Boolean>>> get() = _grid.asStateFlow()
 
+    private val _counter = MutableStateFlow(0)
+    override val counter: StateFlow<Int>
+        get() = _counter
+
+
     override fun setGameType(gameType: GameType) {
         // update the gametype in the gamestate
         _gameState.value = _gameState.value.copy(gameType = gameType)
@@ -84,7 +96,9 @@ class GameVM(
         job?.cancel()  // Cancel any existing game loop
         nBackHistory= emptyList()
         // Get the events from our C-model (returns IntArray, so we need to convert to Array<Int>)
-        events = nBackHelper.generateNBackString(10, 9, 30, nBack).toList().toTypedArray()  // Todo Higher Grade: currently the size etc. are hardcoded, make these based on user input
+        events = nBackHelper.generateNBackString(10, 9, 30, nBack.value).toList().toTypedArray()  // Todo Higher Grade: currently the size etc. are hardcoded, make these based on user input
+        //val minArray = arrayOf(1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2)
+        //events = minArray
         Log.d("GameVM", "The following sequence was generated: ${events.contentToString()}")
 
         job = viewModelScope.launch {
@@ -109,13 +123,27 @@ class GameVM(
          * Make sure the user can only register a match once for each event.
          */
 
+
+
         val currentGameState = gameState.value
+        //values [1,2,1,2,1,2,1,2]
+        //coutner 0 1 2 3 4 5 6 7
+        //counter = 2
+        // value = 1 match = true
+            Log.d("mygame" ,"val"+currentGameState.eventValue)
+        Log.d("mygame" ,"pval"+ nBackHistory[_counter.value-nBack.value] )
+
+        if (currentGameState.eventValue==nBackHistory[_counter.value-nBack.value] && nBack.value <= _counter.value){
+            Log.d("mygame" ,"match")
+            _score.value++
+        }
 
         //check if the event is valid(not equal to -1) and has not been registered yes
         if (currentGameState.eventValue != -1 && isEventAlreadyRegistered(currentGameState.eventValue)) {
             //check if there is a match based on user input
 
             val isMatch = false
+
 
             if (isMatch) {
                 //update score and prevent registrering a match for the same event again
@@ -169,6 +197,7 @@ class GameVM(
             nBackHistory = nBackHistory + value
             Log.d("NBack History", nBackHistory.toString())
             delay(eventInterval)
+            _counter.value++
         }
     }
 
@@ -197,6 +226,21 @@ class GameVM(
     fun initGrid(){
         val grid = List(3) { List(3) { false } }
         _grid.value = grid
+    }
+    override fun increaseNback(){
+        if (_nBack.value < 5) {
+            _nBack.value +=1
+        }else{
+            _nBack.value = 5
+        }
+    }
+
+     override fun decreaseNback(){
+         if (_nBack.value>1) {
+             _nBack.value -=1
+         }else{
+             _nBack.value = 1
+         }
     }
 }
 

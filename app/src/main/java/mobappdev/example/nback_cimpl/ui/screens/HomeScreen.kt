@@ -1,5 +1,6 @@
 package mobappdev.example.nback_cimpl.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +47,7 @@ import mobappdev.example.nback_cimpl.ui.viewmodels.GameViewModel
  *
  */
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun HomeScreen(
     vm: GameViewModel,
@@ -55,6 +57,7 @@ fun HomeScreen(
     val gameState by vm.gameState.collectAsState()
     val snackBarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val nBack by vm.nBack.collectAsState()
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackBarHostState) }
@@ -80,6 +83,28 @@ fun HomeScreen(
                     Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+
+                    Row(
+                        Modifier.padding(10.dp)
+                            .fillMaxWidth(),
+                        //horizontalArrangement = Arrangement.Center,
+                        horizontalArrangement = Arrangement.SpaceEvenly// Adjust the spacing as needed
+
+                    ) {
+                        Button(
+                            onClick = { vm.decreaseNback() }
+
+                        ) {
+                            Text(text = "-1")
+                        }
+                        Text(text = "N = $nBack")
+                        Button(
+                            onClick = { vm.increaseNback() }
+
+                        ) {
+                            Text(text = "+1")
+                        }
+                    }
                     if (gameState.eventValue != -1) {
                         Text(
                             modifier = Modifier.fillMaxWidth(),
@@ -125,6 +150,8 @@ fun HomeScreen(
                         // Todo: change this button behaviour
                         //vm.checkMatch()
                         vm.setGameType(GameType.Visual)
+                        vm.startGame()
+
                         //navigate
 
                         navController.navigate("game")

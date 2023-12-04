@@ -27,6 +27,7 @@ import mobappdev.example.nback_cimpl.R
 import mobappdev.example.nback_cimpl.ui.theme.Purple40
 import mobappdev.example.nback_cimpl.ui.theme.PurpleGrey80
 import mobappdev.example.nback_cimpl.ui.viewmodels.GameType
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @Composable
@@ -93,17 +94,32 @@ fun GameScreen(
             verticalAlignment = Alignment.Bottom
         ) {
             // Start Game button
-            Button(
+           /* Button(
                 onClick = {
                     // TODO: Add logic to start the game
-                    vm.startGame()
+
                 },
                 modifier = Modifier
                     .weight(1f)
+                    .padding(30.dp)
                     .padding(end = 8.dp)
             ) {
                 Text(text = "Start")
-            }
+            }*/
+
+          /*  Button(onClick = {
+                vm.startGame()
+            }) {
+
+                Text(
+                    modifier = Modifier
+                         .height(48.dp)
+                   , text = "Start",
+                    style = MaterialTheme.typography.displaySmall
+
+
+                )
+            }*/
 
             // Sound button
             Button(
@@ -135,7 +151,7 @@ fun GameScreen(
                     // TODO: Add logic for the position match button clicked
 
                     if (gameState.value.gameType.equals(GameType.Visual)){
-                        //vm.checkMatch()
+                        vm.checkMatch()
                     }
 
                 },
