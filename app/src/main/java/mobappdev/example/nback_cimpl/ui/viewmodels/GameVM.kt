@@ -1,6 +1,7 @@
 package mobappdev.example.nback_cimpl.ui.viewmodels
 
 import android.util.Log
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -40,11 +41,10 @@ interface GameViewModel {
     val highscore: StateFlow<Int>
     val nBack: Int
     val grid: StateFlow<List<List<Boolean>>>
-
     fun setGameType(gameType: GameType)
     fun startGame()
 
-    fun checkMatch(userInput: GameType)
+    fun checkMatch()
 }
 
 class GameVM(
@@ -71,6 +71,7 @@ class GameVM(
     private val nBackHelper = NBackHelper()  // Helper that generate the event array
     private var events = emptyArray<Int>()  // Array with all events
 
+    private var nBackHistory = emptyList<Int>()
     private val _grid: MutableStateFlow<List<List<Boolean>>> = MutableStateFlow(emptyList())
     override val grid: StateFlow<List<List<Boolean>>> get() = _grid.asStateFlow()
 
@@ -81,7 +82,7 @@ class GameVM(
 
     override fun startGame() {
         job?.cancel()  // Cancel any existing game loop
-
+        nBackHistory= emptyList()
         // Get the events from our C-model (returns IntArray, so we need to convert to Array<Int>)
         events = nBackHelper.generateNBackString(10, 9, 30, nBack).toList().toTypedArray()  // Todo Higher Grade: currently the size etc. are hardcoded, make these based on user input
         Log.d("GameVM", "The following sequence was generated: ${events.contentToString()}")
@@ -102,7 +103,7 @@ class GameVM(
 
 
 
-    override fun checkMatch(userInput: GameType, ) {
+    override fun checkMatch() {
         /**
          * Todo: This function should check if there is a match when the user presses a match button
          * Make sure the user can only register a match once for each event.
@@ -149,7 +150,7 @@ class GameVM(
         // Todo: Make work for Basic grade
     }
 
-    private suspend fun runVisualGame(events: Array<Int>){
+    /*private suspend fun runVisualGame(events: Array<Int>){
         // Todo: Replace this code for actual game code
         Log.d("mygame","in visual game")
         initGrid()
@@ -158,6 +159,17 @@ class GameVM(
             delay(eventInterval)
         }
 
+    }*/
+
+    private suspend fun runVisualGame(events: Array<Int>) {
+        Log.d("mygame", "in visual game")
+
+        for (value in events) {
+            _gameState.value = _gameState.value.copy(eventValue = value)
+            nBackHistory = nBackHistory + value
+            Log.d("NBack History", nBackHistory.toString())
+            delay(eventInterval)
+        }
     }
 
     private fun runAudioVisualGame(){

@@ -105,8 +105,7 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(onClick = {
-                    // Todo: change this button behaviour
-                    //vm.checkMatch()
+                    vm.setGameType(GameType.Audio)
                     scope.launch {
                         snackBarHostState.showSnackbar(
                             message = "Hey! you clicked the audio button"
