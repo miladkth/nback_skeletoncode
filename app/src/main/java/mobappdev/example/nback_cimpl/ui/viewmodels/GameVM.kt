@@ -51,7 +51,7 @@ interface GameViewModel {
     fun increaseNback() {}
     fun decreaseNback(){}
 
-     fun checkMatchAudio(){}
+
 }
 
 class GameVM(
@@ -88,7 +88,7 @@ class GameVM(
     private val _counter = MutableStateFlow(0)
     override val counter: StateFlow<Int>
         get() = _counter
-    val textToSay = arrayOf("a", "b", "c","d" , "e","f","g","h","i")
+    val textToSay = arrayOf("a","b","c","d","e","f","g","h","i")
      lateinit var textToSpeech: TextToSpeech
 
     override fun setGameType(gameType: GameType) {
@@ -119,42 +119,7 @@ class GameVM(
         }
     }
 
-    override fun checkMatchAudio() {
-        /**
-         * Todo: This function should check if there is a match when the user presses a match button
-         * Make sure the user can only register a match once for each event.
-         */
 
-
-
-        val currentGameState = gameState.value
-        //values [1,2,1,2,1,2,1,2]
-        //coutner 0 1 2 3 4 5 6 7
-        //counter = 2
-        // value = 1 match = true
-        Log.d("mygame" ,"val"+currentGameState.eventValue)
-        Log.d("mygame" ,"pval"+ nBackHistory[_counter.value-nBack.value] )
-
-        if (currentGameState.eventValue==nBackHistory[_counter.value-nBack.value] && nBack.value <= _counter.value){
-            Log.d("mygame" ,"match")
-            _score.value++
-        }
-
-        //check if the event is valid(not equal to -1) and has not been registered yes
-        if (currentGameState.eventValue != -1 && isEventAlreadyRegistered(currentGameState.eventValue)) {
-            //check if there is a match based on user input
-
-            val isMatch = false
-
-
-            if (isMatch) {
-                //update score and prevent registrering a match for the same event again
-                _score.value += 1
-                _gameState.value = currentGameState.copy(eventValue = -1)
-            }
-        }
-
-    }
 
 
 
@@ -165,7 +130,6 @@ class GameVM(
          */
 
 
-
         val currentGameState = gameState.value
         //values [1,2,1,2,1,2,1,2]
         //coutner 0 1 2 3 4 5 6 7
@@ -176,7 +140,7 @@ class GameVM(
 
         if (currentGameState.eventValue==nBackHistory[_counter.value-nBack.value] && nBack.value <= _counter.value){
             Log.d("mygame" ,"match")
-            _score.value++
+                _score.value++
         }
 
         //check if the event is valid(not equal to -1) and has not been registered yes
@@ -221,7 +185,9 @@ class GameVM(
         for (value in events) {
             _gameState.value = _gameState.value.copy(eventValue = value)
             textToSpeech.speak(textToSay[value],TextToSpeech.QUEUE_FLUSH,null,null)  // Speak the corresponding text
+            nBackHistory = nBackHistory + value
             delay(eventInterval)
+            _counter.value++
         }
 
     }
@@ -239,7 +205,6 @@ class GameVM(
 
     private suspend fun runVisualGame(events: Array<Int>) {
         Log.d("mygame", "in visual game")
-
         for (value in events) {
             _gameState.value = _gameState.value.copy(eventValue = value)
             nBackHistory = nBackHistory + value
