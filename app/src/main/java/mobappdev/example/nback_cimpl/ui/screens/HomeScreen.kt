@@ -131,11 +131,13 @@ fun HomeScreen(
             ) {
                 Button(onClick = {
                     vm.setGameType(GameType.Audio)
-                    scope.launch {
-                        snackBarHostState.showSnackbar(
-                            message = "Hey! you clicked the audio button"
-                        )
-                    }
+
+                    vm.startGame()
+
+                    //navigate
+
+                    navController.navigate("audiogame")
+
                 }) {
                     Icon(
                         painter = painterResource(id = R.drawable.sound_on),

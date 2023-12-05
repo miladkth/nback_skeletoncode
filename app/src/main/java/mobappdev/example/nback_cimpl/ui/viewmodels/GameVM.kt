@@ -1,5 +1,6 @@
 package mobappdev.example.nback_cimpl.ui.viewmodels
 
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
@@ -49,6 +50,8 @@ interface GameViewModel {
     fun checkMatch()
     fun increaseNback() {}
     fun decreaseNback(){}
+
+     fun checkMatchAudio(){}
 }
 
 class GameVM(
@@ -85,7 +88,8 @@ class GameVM(
     private val _counter = MutableStateFlow(0)
     override val counter: StateFlow<Int>
         get() = _counter
-
+    val textToSay = arrayOf("a", "b", "c","d" , "e","f","g","h","i")
+     lateinit var textToSpeech: TextToSpeech
 
     override fun setGameType(gameType: GameType) {
         // update the gametype in the gamestate
@@ -103,7 +107,7 @@ class GameVM(
 
         job = viewModelScope.launch {
             when (gameState.value.gameType) {
-                GameType.Audio -> runAudioGame()
+                GameType.Audio -> runAudioGame(events)
                 GameType.AudioVisual -> runAudioVisualGame()
                 GameType.Visual -> runVisualGame(events)
             }
@@ -113,6 +117,43 @@ class GameVM(
                 userPreferencesRepository.saveHighScore(_highscore.value)
             }
         }
+    }
+
+    override fun checkMatchAudio() {
+        /**
+         * Todo: This function should check if there is a match when the user presses a match button
+         * Make sure the user can only register a match once for each event.
+         */
+
+
+
+        val currentGameState = gameState.value
+        //values [1,2,1,2,1,2,1,2]
+        //coutner 0 1 2 3 4 5 6 7
+        //counter = 2
+        // value = 1 match = true
+        Log.d("mygame" ,"val"+currentGameState.eventValue)
+        Log.d("mygame" ,"pval"+ nBackHistory[_counter.value-nBack.value] )
+
+        if (currentGameState.eventValue==nBackHistory[_counter.value-nBack.value] && nBack.value <= _counter.value){
+            Log.d("mygame" ,"match")
+            _score.value++
+        }
+
+        //check if the event is valid(not equal to -1) and has not been registered yes
+        if (currentGameState.eventValue != -1 && isEventAlreadyRegistered(currentGameState.eventValue)) {
+            //check if there is a match based on user input
+
+            val isMatch = false
+
+
+            if (isMatch) {
+                //update score and prevent registrering a match for the same event again
+                _score.value += 1
+                _gameState.value = currentGameState.copy(eventValue = -1)
+            }
+        }
+
     }
 
 
@@ -130,7 +171,7 @@ class GameVM(
         //coutner 0 1 2 3 4 5 6 7
         //counter = 2
         // value = 1 match = true
-            Log.d("mygame" ,"val"+currentGameState.eventValue)
+        Log.d("mygame" ,"val"+currentGameState.eventValue)
         Log.d("mygame" ,"pval"+ nBackHistory[_counter.value-nBack.value] )
 
         if (currentGameState.eventValue==nBackHistory[_counter.value-nBack.value] && nBack.value <= _counter.value){
@@ -174,8 +215,15 @@ class GameVM(
     }
 
 
-    private fun runAudioGame() {
+    private suspend fun runAudioGame(events: Array<Int>) {
         // Todo: Make work for Basic grade
+        Log.d("mygame", "in audio game")
+        for (value in events) {
+            _gameState.value = _gameState.value.copy(eventValue = value)
+            textToSpeech.speak(textToSay[value],TextToSpeech.QUEUE_FLUSH,null,null)  // Speak the corresponding text
+            delay(eventInterval)
+        }
+
     }
 
     /*private suspend fun runVisualGame(events: Array<Int>){
@@ -214,12 +262,14 @@ class GameVM(
         }
     }
 
+
     init {
         // Code that runs during creation of the vm
         viewModelScope.launch {
             userPreferencesRepository.highscore.collect {
                 _highscore.value = it
             }
+
         }
     }
 

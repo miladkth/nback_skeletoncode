@@ -31,7 +31,7 @@ import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @Composable
-fun GameScreen(
+fun AudioGameScreen(
     vm: GameViewModel,
     navController: NavHostController
 ) {
@@ -150,7 +150,7 @@ fun GameScreen(
                 onClick = {
                     // TODO: Add logic for the position match button clicked
 
-                    if (gameState.value.gameType.equals(GameType.Visual)) {
+                    if (gameState.value.gameType.equals(GameType.Audio)) {
                         vm.checkMatch()
                     }
 
@@ -162,7 +162,7 @@ fun GameScreen(
 
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.visual),
+                    painter = painterResource(id = R.drawable.sound_on),
                     contentDescription = "Position Match",
                     modifier = Modifier
                         .height(48.dp)
@@ -177,24 +177,6 @@ fun GameScreen(
 }
 
 
-@Composable
-fun GameBox(
-    card: Int,
-    currentEventValue: Int
-) {
-    val inactiveColor = PurpleGrey80
-    val activeColor = Purple40
-    // Use animateColorAsState to animate color change
-    val backgroundColor by animateColorAsState(targetValue = if (currentEventValue == card) activeColor else inactiveColor)
-    Box(
-        modifier = Modifier
-            .padding(8.dp)
-            .background(backgroundColor)
-            .aspectRatio(1f)
-    ) {
-        // Content of the box
-    }
-}
 
 
 

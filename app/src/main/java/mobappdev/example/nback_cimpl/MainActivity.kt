@@ -2,6 +2,7 @@ package mobappdev.example.nback_cimpl
 
 import android.content.res.Configuration
 import android.os.Bundle
+import android.speech.tts.TextToSpeech
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,10 +17,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import mobappdev.example.nback_cimpl.ui.screens.AudioGameScreen
 import mobappdev.example.nback_cimpl.ui.screens.GameScreen
 import mobappdev.example.nback_cimpl.ui.screens.HomeScreen
 import mobappdev.example.nback_cimpl.ui.theme.NBack_CImplTheme
 import mobappdev.example.nback_cimpl.ui.viewmodels.GameVM
+import java.util.Locale
 
 /**
  * This is the MainActivity of the application
@@ -65,13 +68,26 @@ class MainActivity : ComponentActivity() {
                         factory = GameVM.Factory
                     )
 
+
                     NavHost(navController ,startDestination = "home"){
                         composable("home") {
                             HomeScreen(vm = gameViewModel, navController = navController)
+
+                                gameViewModel.textToSpeech = TextToSpeech(applicationContext){status ->
+                                    if (status==TextToSpeech.SUCCESS)
+                                    {
+                                         gameViewModel.textToSpeech?.setLanguage(Locale.UK)
+                                    }
+                                }
+
                         }
 
                         composable("game") {
                             GameScreen(vm = gameViewModel, navController = navController)
+                        }
+
+                        composable("audiogame") {
+                            AudioGameScreen(vm = gameViewModel, navController = navController)
                         }
                     }
 
